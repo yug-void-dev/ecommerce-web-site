@@ -3,13 +3,27 @@ const userSchema = new mongoose.Schema(
     {
         fullName : {
             type : String,
-            require : true,
+            required : true,
         },
         email : {
             type : String,
-            require : true,
+            required : true,
             unique : true,
-            lower
-        }
-    }
+            lowercase : true
+        },
+        password :{
+            type : String,
+            required : true
+        },
+        products : 
+            [
+                {
+                    type : mongoose.Schema.Types.ObjectId,
+                    ref: "product"
+                }
+            ]
+    },
+    {timestamps:true}
 )
+
+export const user = mongoose.model("user",userSchema);
