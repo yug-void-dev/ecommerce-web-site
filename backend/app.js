@@ -13,7 +13,7 @@ app.get("/", () => {
 
 app.post("/auth/signup", (req, res) => {
     try {
-        const data = req.body;
+        const data = req.body;+
         
     }
     catch (err) {
@@ -23,6 +23,29 @@ app.post("/auth/signup", (req, res) => {
 
 app.post("/auth/signin", (req, res) => {
   const { email, password } = req.body;
+  try{
+    const isexist = user.findOne({email})
+    if(!isexist){
+        res.status(404).json({ message: "User not found" });
+        return 
+    }
+    if(password == isexist.password){
+        res.status(201).json({
+            message : "user login successfully"
+        })
+        return 
+    }
+    else {
+        res.status(401).json({
+            message : "password is incorrect"
+        })
+        return 
+    }
+  }
+  catch(error){
+    res.status(500).send("Server error")
+    return ;
+  }
   
 });
 
