@@ -19,7 +19,9 @@ app.post("/auth/signup", (req, res) => {
     }
 });
 
-
+app.post("/auth/signin", (req, res) => {
+  const { email, password } = req.body;
+});
 
 const port = process.env.PORT;
 app.listen(port, () => {
