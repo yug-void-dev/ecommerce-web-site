@@ -16,5 +16,4 @@ const adminschema = new mongoose.Schema({
   },
 });
 
-
 export default adminschema;
