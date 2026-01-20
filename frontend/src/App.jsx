@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'reac
+import AuthSystem from './component/AuthSystem';
 
 function App() {
 
   return (
-    <h1 className='bg-red-700'>Welcome</h1>
+    <AuthSystem/>
   )
 }
 
