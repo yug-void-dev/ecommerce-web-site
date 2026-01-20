@@ -10,6 +10,7 @@ app.get("/", () => {
 
 app.post("/auth/signin", (req, res) => {
   const { email, password } = req.body;
+  
 });
 
 const port = process.env.PORT || 4000;
