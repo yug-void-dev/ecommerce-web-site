@@ -1,4 +1,5 @@
 import express from "express";
+import { user } from "./src/models/users/user.model.js";
 import connectDB from "./src/db/db.js";
 import dotenv from 'dotenv'
 dotenv.config()
@@ -13,7 +14,7 @@ app.get("/", () => {
 
 app.post("/auth/signup", (req, res) => {
     try {
-        const data = req.body;+
+        const data = req.body;
         
     }
     catch (err) {
