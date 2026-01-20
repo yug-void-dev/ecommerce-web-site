@@ -1,5 +1,7 @@
 import express from "express";
-
+import connectDB from "./src/db/db.js";
+import dotenv from 'dotenv'
+dotenv.config()
 const app = express();
 
 app.use(express.json());
@@ -25,6 +27,9 @@ app.post("/auth/signin", (req, res) => {
 });
 
 const port = process.env.PORT;
-app.listen(port, () => {
-  console.log(`Server is listening on ${port} number`);
+connectDB()
+.then(()=>{
+    app.listen(port, () => {
+    console.log(`Server is listening on ${port} number 👌`);
 });
+})
