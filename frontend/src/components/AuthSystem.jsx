@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { User, Mail, Lock, Shield } from "lucide-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function AuthSystem() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -28,7 +29,7 @@ export default function AuthSystem() {
       };
       try {
         const res = await axios.post("/api/auth/signup", userObj);
-        console.log(res.data.message);
+        if(res.status==201) toast.success(res.data.message);
       } catch (error) {
         console.log(error);
       }
