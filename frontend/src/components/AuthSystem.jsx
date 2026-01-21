@@ -38,8 +38,12 @@ export default function AuthSystem() {
         password: formData.password,
       };
 
-      const res = await axios.post("api/auth/signin", userSiginData);
-      console.log(res);
+      try {
+        const res = await axios.post("api/auth/signin", userSiginData);
+        console.log(res);
+      } catch (err) {
+        console.log(`Error Occured in sending data to server ${err.message}`);
+      }
     }
 
     setFormData({ fullName: "", email: "", password: "" });
