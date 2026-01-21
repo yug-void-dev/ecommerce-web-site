@@ -13,9 +13,17 @@ app.get("/", () => {
 });
 
 app.post("/api/auth/signup", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const { fullName, password, email } = req.body;
+
+    const isexist = await user.findOne({ email });
+
+
+    if(isexist) {
+      res.status(409).send('User Already exist')
+      return;
+    }
     await user
       .create({
         fullName,
@@ -24,14 +32,14 @@ app.post("/api/auth/signup", async (req, res) => {
       })
       .then(() => res.status(201).json({ message: "Sign Up Successful" }));
   } catch (err) {
-    res.status(500).json({message : err.message});
-    }
+    res.status(500).json({ message: err.message });
+  }
 });
 
-app.post("/api/auth/signin", async(req, res) => {
+app.post("/api/auth/signin", async (req, res) => {
   const { email, password } = req.body;
   console.log(req.body);
-  
+
   try {
     const isexist = await user.findOne({ email });
     if (!isexist) {
