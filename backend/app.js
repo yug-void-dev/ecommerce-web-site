@@ -12,12 +12,13 @@ app.get("/", () => {
   res.send("Login Page");
 });
 
-app.post("api/auth/signup", async (req, res) => {
+app.post("/api/auth/signup", async (req, res) => {
+  console.log(req.body)
   try {
-    const { fullname, password, email } = req.body;
+    const { fullName, password, email } = req.body;
     await user
       .create({
-        fullname,
+        fullName,
         email,
         password,
       })
@@ -27,7 +28,7 @@ app.post("api/auth/signup", async (req, res) => {
     }
 });
 
-app.post("api/auth/signin", (req, res) => {
+app.post("/api/auth/signin", (req, res) => {
   const { email, password } = req.body;
   try {
     const isexist = user.findOne({ email });
