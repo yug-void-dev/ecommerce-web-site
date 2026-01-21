@@ -39,7 +39,7 @@ export default function AuthSystem() {
       };
 
       try {
-        const res = await axios.post("api/auth/signin", userSiginData);
+        const res = await axios.post("/api/auth/signin", userSiginData);
         console.log(res);
       } catch (err) {
         console.log(`Error Occured in sending data to server ${err.message}`);

@@ -28,10 +28,12 @@ app.post("/api/auth/signup", async (req, res) => {
     }
 });
 
-app.post("/api/auth/signin", (req, res) => {
+app.post("/api/auth/signin", async(req, res) => {
   const { email, password } = req.body;
+  console.log(req.body);
+  
   try {
-    const isexist = user.findOne({ email });
+    const isexist = await user.findOne({ email });
     if (!isexist) {
       res.status(404).json({ message: "User not found" });
       return;
