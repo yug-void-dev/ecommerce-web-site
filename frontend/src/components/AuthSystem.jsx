@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import { User, Mail, Lock, Shield } from "lucide-react";
 import axios from "axios";
+=======
+import { useState } from 'react';
+import { User, Mail, Lock, Shield } from 'lucide-react';
+import axios from 'axios';
+
+>>>>>>> c52b5e7cc80cc13f76c714fa46c2ae9d35f9f3d8
 export default function AuthSystem() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [userType, setUserType] = useState("user"); // 'user' or 'admin'
@@ -10,7 +17,7 @@ export default function AuthSystem() {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (userType === "admin") {
@@ -20,10 +27,22 @@ export default function AuthSystem() {
       });
       alert(`Admin login attempted with: ${formData.email}`);
     } else if (isSignUp) {
-      console.log("User Sign Up:", formData);
-      alert(`User registered: ${formData.fullName}`);
+      const userObj = {
+        fullName : formData.fullName,
+        email : formData.email,
+        password : formData.password
+      }
+      try{
+        const res = await axios("/api/auth/signup",userObj);
+        console.log(res)
+        
+      }catch(error){
+        console.log(error)
+      }
     } else {
-      await axios.post('api/auth/signin', formData)
+      const res = await axios.post('api/auth/signin', formData)
+      console.log(res);
+      
     }
 
     setFormData({ fullName: "", email: "", password: "" });
