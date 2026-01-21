@@ -1,8 +1,8 @@
 import express from "express";
 import { user } from "./src/models/users/user.model.js";
 import connectDB from "./src/db/db.js";
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 
 app.use(express.json());
@@ -12,7 +12,7 @@ app.get("/", () => {
   res.send("Login Page");
 });
 
-app.post("/auth/signup", async (req, res) => {
+app.post("api/auth/signup", async (req, res) => {
   try {
     const { fullname, password, email } = req.body;
     await user
@@ -24,41 +24,37 @@ app.post("/auth/signup", async (req, res) => {
       .then(() => res.status(201).json({ message: "Sign Up Successful" }));
   } catch (err) {
     res.send(`Error Occured in form submission ${err.message}`);
-    }
+  }
 });
 
-app.post("/auth/signin", (req, res) => {
+app.post("api/auth/signin", (req, res) => {
   const { email, password } = req.body;
-  try{
-    const isexist = user.findOne({email})
-    if(!isexist){
-        res.status(404).json({ message: "User not found" });
-        return 
+  try {
+    const isexist = user.findOne({ email });
+    if (!isexist) {
+      res.status(404).json({ message: "User not found" });
+      return;
     }
-    if(password == isexist.password){
-        res.status(201).json({
-            message : "user login successfully"
-        })
-        return 
+    if (password == isexist.password) {
+      res.status(201).json({
+        message: "user login successfully",
+      });
+      return;
+    } else {
+      res.status(401).json({
+        message: "password is incorrect",
+      });
+      return;
     }
-    else {
-        res.status(401).json({
-            message : "password is incorrect"
-        })
-        return 
-    }
+  } catch (error) {
+    res.status(500).send("Server error");
+    return;
   }
-  catch(error){
-    res.status(500).send("Server error")
-    return ;
-  }
-  
 });
 
 const port = process.env.PORT;
-connectDB()
-.then(()=>{
-    app.listen(port, () => {
+connectDB().then(() => {
+  app.listen(port, () => {
     console.log(`Server is listening on ${port} number 👌`);
+  });
 });
-})
