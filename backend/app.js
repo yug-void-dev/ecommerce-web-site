@@ -12,22 +12,23 @@ app.get("/", () => {
   res.send("Login Page");
 });
 
-app.post("api/auth/signup", async (req, res) => {
+app.post("/api/auth/signup", async (req, res) => {
+  console.log(req.body)
   try {
-    const { fullname, password, email } = req.body;
+    const { fullName, password, email } = req.body;
     await user
       .create({
-        fullname,
+        fullName,
         email,
         password,
       })
       .then(() => res.status(201).json({ message: "Sign Up Successful" }));
   } catch (err) {
-    res.send(`Error Occured in form submission ${err.message}`);
-  }
+    res.status(500).json({message : err.message});
+    }
 });
 
-app.post("api/auth/signin", (req, res) => {
+app.post("/api/auth/signin", (req, res) => {
   const { email, password } = req.body;
   try {
     const isexist = user.findOne({ email });

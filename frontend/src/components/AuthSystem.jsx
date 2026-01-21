@@ -27,8 +27,8 @@ export default function AuthSystem() {
         password: formData.password,
       };
       try {
-        const res = await axios("/api/auth/signup", userObj);
-        console.log(res);
+        const res = await axios.post("/api/auth/signup", userObj);
+        console.log(res.data.message);
       } catch (error) {
         console.log(error);
       }
