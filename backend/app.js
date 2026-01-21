@@ -12,25 +12,36 @@ app.get("/", () => {
   res.send("Login Page");
 });
 
-app.post("api/auth/signup", async (req, res) => {
+app.post("/api/auth/signup", async (req, res) => {
+  console.log(req.body);
   try {
-    const { fullname, password, email } = req.body;
+    const { fullName, password, email } = req.body;
+
+    const isexist = await user.findOne({ email });
+
+
+    if(isexist) {
+      res.status(409).send('User Already exist')
+      return;
+    }
     await user
       .create({
-        fullname,
+        fullName,
         email,
         password,
       })
       .then(() => res.status(201).json({ message: "Sign Up Successful" }));
   } catch (err) {
-    res.status(500).json({message : err.message});
-    }
+    res.status(500).json({ message: err.message });
+  }
 });
 
-app.post("api/auth/signin", (req, res) => {
+app.post("/api/auth/signin", async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body);
+
   try {
-    const isexist = user.findOne({ email });
+    const isexist = await user.findOne({ email });
     if (!isexist) {
       res.status(404).json({ message: "User not found" });
       return;

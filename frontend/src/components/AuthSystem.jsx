@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { User, Mail, Lock, Shield } from "lucide-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function AuthSystem() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -27,8 +28,8 @@ export default function AuthSystem() {
         password: formData.password,
       };
       try {
-        const res = await axios("/api/auth/signup", userObj);
-        console.log(res);
+        const res = await axios.post("/api/auth/signup", userObj);
+        if(res.status==201) toast.success(res.data.message);
       } catch (error) {
         console.log(error);
       }
@@ -38,8 +39,12 @@ export default function AuthSystem() {
         password: formData.password,
       };
 
-      const res = await axios.post("api/auth/signin", userSiginData);
-      console.log(res);
+      try {
+        const res = await axios.post("/api/auth/signin", userSiginData);
+        console.log(res);
+      } catch (err) {
+        console.log(`Error Occured in sending data to server ${err.message}`);
+      }
     }
 
     setFormData({ fullName: "", email: "", password: "" });
