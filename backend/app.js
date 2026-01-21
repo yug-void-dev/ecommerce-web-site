@@ -23,7 +23,7 @@ app.post("/auth/signup", async (req, res) => {
       })
       .then(() => res.status(201).json({ message: "Sign Up Successful" }));
   } catch (err) {
-    res.send(`Error Occured in form submission ${err.message}`);
+    res.status(500).json({message : err.message});
     }
 });
 
