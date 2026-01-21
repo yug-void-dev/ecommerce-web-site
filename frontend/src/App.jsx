@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import AuthSystem from './component/AuthSystem';
+import AuthSystem from './components/AuthSystem';
 
 function App() {
 
