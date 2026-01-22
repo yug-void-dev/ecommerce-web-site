@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema(
             required: true,
             default : 0,
         },
-        discout: {
+        discount: {
             type: Number,
             required: true,
             default : 0,
@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema(
             type: string,
         },
         category: {
-            type : string,
+            type : ["Electronics"],
         }
     },
     {

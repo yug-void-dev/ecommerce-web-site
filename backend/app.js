@@ -2,6 +2,7 @@ import express from "express";
 import { user } from "./src/models/users/user.model.js";
 import connectDB from "./src/db/db.js";
 import dotenv from "dotenv";
+import { JsonWebTokenError } from "jsonwebtoken";
 dotenv.config();
 const app = express();
 
