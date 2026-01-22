@@ -2,16 +2,13 @@ import express from "express";
 import { user } from "./src/models/users/user.model.js";
 import connectDB from "./src/db/db.js";
 import dotenv from "dotenv";
-import { JsonWebTokenError } from "jsonwebtoken";
+import bcrypt from "bcrypt"
+import JsonWebToken from "jsonwebtoken";
 dotenv.config();
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.get("/", () => {
-  res.send("Login Page");
-});
 
 app.post("/api/auth/signup", async (req, res) => {
   console.log(req.body);
@@ -20,16 +17,18 @@ app.post("/api/auth/signup", async (req, res) => {
 
     const isexist = await user.findOne({ email });
 
-
     if(isexist) {
-      res.status(409).send('User Already exist')
+      res.status(409).json({message : 'User Already exist'})  
       return;
     }
+
+    const hashPassword = await bcrypt.hash(password,10);
+
     await user
       .create({
         fullName,
         email,
-        password,
+        password : hashPassword,
       })
       .then(() => res.status(201).json({ message: "Sign Up Successful" }));
   } catch (err) {
@@ -39,21 +38,27 @@ app.post("/api/auth/signup", async (req, res) => {
 
 app.post("/api/auth/signin", async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
 
   try {
     const isexist = await user.findOne({ email });
     if (!isexist) {
-      res.status(404).json({ message: "User not found" });
+      res.status(409).json({ message: "User not found" });
       return;
     }
-    if (password == isexist.password) {
+    if (bcrypt.compare(password,isexist.password)) {
+      const token = JsonWebToken.sign(
+          req.body,
+          process.env.SecretKey,
+          {expiresIn : "12h"}
+      )
+
       res.status(201).json({
         message: "user login successfully",
+        token
       });
       return;
     } else {
-      res.status(401).json({
+      res.status(409).json({
         message: "password is incorrect",
       });
       return;
