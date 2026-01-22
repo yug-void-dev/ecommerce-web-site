@@ -31,7 +31,7 @@ export default function AuthSystem() {
         const res = await axios.post("/api/auth/signup", userObj);
         if(res.status==201) toast.success(res.data.message);
       } catch (error) {
-        console.log(error);
+        console.log(error);sd
       }
     } else {
       const userSiginData = {
