@@ -9,6 +9,11 @@ export default function Homepage() {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
 
+  useEffect(()=>{
+    const token = localStorage.getItem("token-olex")
+    
+})
+
   const bannerSlides = [
     {
       title: "Republic Day Sale",
