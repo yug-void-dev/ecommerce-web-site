@@ -1,13 +1,20 @@
 
 import AuthSystem from './components/AuthSystem';
 import { ToastContainer } from 'react-toastify';
+import Homepage from './components/HOMEPAGE';
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
 function App() {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={2000} />
-      <AuthSystem/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage/>}/>
+          <Route path="/auth" element={<AuthSystem/>}/>
+        </Routes>
+      </BrowserRouter>
+      
     </>
   )
 }
