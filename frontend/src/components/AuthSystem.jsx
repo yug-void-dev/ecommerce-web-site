@@ -30,8 +30,12 @@ export default function AuthSystem() {
       try {
         const res = await axios.post("/api/auth/signup", userObj);
         if(res.status==201) toast.success(res.data.message);
+        else if(res.status==409) {
+          toast.error(res.data.message)
+        }
       } catch (error) {
-        console.log(error);
+        console.log(error)
+          toast.error(error.response.data.message)
       }
     } else {
       const userSiginData = {
@@ -41,9 +45,9 @@ export default function AuthSystem() {
 
       try {
         const res = await axios.post("/api/auth/signin", userSiginData);
-        console.log(res);
+        if(res.status==201) toast.success(res.data.message)
       } catch (err) {
-        console.log(`Error Occured in sending data to server ${err.message}`);
+        toast.error(err.response.data.message)
       }
     }
 

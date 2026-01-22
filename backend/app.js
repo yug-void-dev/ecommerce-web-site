@@ -21,7 +21,7 @@ app.post("/api/auth/signup", async (req, res) => {
 
 
     if(isexist) {
-      res.status(409).send('User Already exist')
+      res.status(409).json({message : 'User Already exist'})  
       return;
     }
     await user
@@ -38,12 +38,11 @@ app.post("/api/auth/signup", async (req, res) => {
 
 app.post("/api/auth/signin", async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
 
   try {
     const isexist = await user.findOne({ email });
     if (!isexist) {
-      res.status(404).json({ message: "User not found" });
+      res.status(409).json({ message: "User not found" });
       return;
     }
     if (password == isexist.password) {
@@ -52,7 +51,7 @@ app.post("/api/auth/signin", async (req, res) => {
       });
       return;
     } else {
-      res.status(401).json({
+      res.status(409).json({
         message: "password is incorrect",
       });
       return;
