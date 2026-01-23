@@ -2,6 +2,7 @@ import { useState } from "react";
 import { User, Mail, Lock, Shield } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
 
 export default function AuthSystem() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -48,6 +49,7 @@ export default function AuthSystem() {
         if(res.status==201){
             localStorage.setItem("token-olex",res.data.token)
            toast.success(res.data.message)
+           Navigate('/')
         }
       } catch (err) {
         toast.error(err.response.data.message)
