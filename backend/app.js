@@ -4,6 +4,7 @@ import connectDB from "./src/db/db.js";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt"
 import JsonWebToken from "jsonwebtoken";
+import authMiddleware from "./src/middleware/token.js";
 dotenv.config();
 const app = express();
 
@@ -68,6 +69,11 @@ app.post("/api/auth/signin", async (req, res) => {
     return;
   }
 });
+
+app.get('/api/user/home', authMiddleware, (req, res) => {
+  res.status.apply(201).json({message: "Welcome"})
+})
+
 
 const port = process.env.PORT;
 connectDB().then(() => {
