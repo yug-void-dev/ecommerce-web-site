@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, User, Menu, Search, X, ChevronLeft, ChevronRight, Heart, Star } from 'lucide-react';
 import ProductCard from './ProductCard';
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 export default function Homepage() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,9 +13,20 @@ export default function Homepage() {
   const [cart, setCart] = useState([]);
 
   useEffect(()=>{
-    const token = localStorage.getItem("token-olex")
-    
-})
+    const checkUser = async () => {
+      try{
+        const res = await axios.get('/api/user/home',{
+        headers : {
+          Authorization : `Bearer ${localStorage.getItem('token-olex')}`
+        }
+      })
+      }
+      catch(error){
+        navigate('/auth')
+      }
+    }
+    checkUser()
+},[])
 
   const bannerSlides = [
     {
