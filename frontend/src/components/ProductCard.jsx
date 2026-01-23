@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, Star, ShoppingCart } from 'lucide-react';
 
-export default function IPhoneProductCard() {
+export default function ProductCard() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 

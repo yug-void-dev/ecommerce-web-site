@@ -45,7 +45,10 @@ export default function AuthSystem() {
 
       try {
         const res = await axios.post("/api/auth/signin", userSiginData);
-        if(res.status==201) toast.success(res.data.message)
+        if(res.status==201){
+            localStorage.setItem("token-olex",res.data.token)
+           toast.success(res.data.message)
+        }
       } catch (err) {
         toast.error(err.response.data.message)
       }
