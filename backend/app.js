@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt"
 import JsonWebToken from "jsonwebtoken";
 import authMiddleware from "./src/middleware/token.js";
+import { admin } from "./src/models/admin/admin.model.js";
 dotenv.config();
 const app = express();
 
@@ -37,7 +38,7 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 });
 
-app.post("/api/auth/signin", async (req, res) => {
+app.post("/api/auth/user/signin", async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -70,7 +71,44 @@ app.post("/api/auth/signin", async (req, res) => {
   }
 });
 
+app.post("/api/auth/admin/signin", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const isexist = await admin.findOne({ email });
+    if (!isexist) {
+      res.status(409).json({ message: "admin not found" });
+      return;
+    }
+    if (password==isexist.password) {
+      const token = JsonWebToken.sign(
+          req.body,
+          process.env.SecretKey,
+          {expiresIn : "1h"}
+      )
+
+      res.status(201).json({
+        message: "admin login successfully",
+        token
+      });
+      return;
+    } else {
+      res.status(409).json({
+        message: "password is incorrect",
+      });
+      return;
+    }
+  } catch (error) {
+    res.status(500).send("Server error");
+    return;
+  }
+});
+
 app.get('/api/user/home', authMiddleware, (req, res) => {
+  res.status(201).json({message: "Welcome"})
+})
+
+app.get('/api/admin/home', authMiddleware, (req, res) => {
   res.status(201).json({message: "Welcome"})
 })
 

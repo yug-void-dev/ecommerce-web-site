@@ -1,19 +1,19 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 const adminschema = new mongoose.Schema({
   name: {
-    typeof: "string",
-    require: true,
+    type: "string",
+    required: true,
   },
   password: {
-    typeof: "string",
-    require: true,
+    type: "string",
+    required: true,
   },
   users: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
-    require: true,
+    required: true,
   },
 });
 
-export default adminschema;
+export const admin = mongoose.model("admin",adminschema);
