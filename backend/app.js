@@ -71,7 +71,7 @@ app.post("/api/auth/signin", async (req, res) => {
 });
 
 app.get('/api/user/home', authMiddleware, (req, res) => {
-  res.status.apply(201).json({message: "Welcome"})
+  res.status(201).json({message: "Welcome"})
 })
 
 

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { User, Mail, Lock, Shield } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthSystem() {
+  const navigate = useNavigate()
   const [isSignUp, setIsSignUp] = useState(false);
   const [userType, setUserType] = useState("user"); // 'user' or 'admin'
   const [formData, setFormData] = useState({
@@ -49,9 +50,10 @@ export default function AuthSystem() {
         if(res.status==201){
             localStorage.setItem("token-olex",res.data.token)
            toast.success(res.data.message)
-           Navigate('/')
+           navigate('/')
         }
       } catch (err) {
+        console.log(err)
         toast.error(err.response.data.message)
       }
     }

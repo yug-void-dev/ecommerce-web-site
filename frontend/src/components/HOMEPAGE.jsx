@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingCart, User, Menu, Search, X, ChevronLeft, ChevronRight, Heart, Star } from 'lucide-react';
 import ProductCard from './ProductCard';
 import axios from 'axios'
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Homepage() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,11 +22,11 @@ export default function Homepage() {
       })
       }
       catch(error){
-        Navigate('/auth/')
+        navigate('/auth')
       }
     }
     checkUser()
-})
+},[])
 
   const bannerSlides = [
     {
