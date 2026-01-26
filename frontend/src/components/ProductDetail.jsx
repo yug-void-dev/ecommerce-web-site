@@ -48,6 +48,7 @@ const ProductDetail = () => {
   };
 
   const handleImageUpload = (files) => {
+    console.log(files)
     const fileArray = Array.from(files);
     const maxSize = 5 * 1024 * 1024; // 5MB
     const maxImages = 8;
@@ -129,36 +130,35 @@ const ProductDetail = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (validateForm()) {
+      console.log(formData,images)
       const submitData = new FormData();
       Object.keys(formData).forEach((key) => {
         submitData.append(key, formData[key]);
       });
-
+      
       images.forEach((img, index) => {
         submitData.append("images", img.file);
       });
-
+      // console.log(submitData)
+      for (let pair of submitData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
       try {
-        const res = await axios.post("/api/user/product-data", submitData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const res = await axios.post("/api/user/product-data", submitData);
         console.log(res.data);
 
-        setFormData({
-          title: "",
-          description: "",
-          price: "",
-          discount: "0",
-          category: "",
-          condition: "",
-          brand: "",
-          location: "",
-        });
-        setImages([]);
+        // setFormData({
+        //   title: "",
+        //   description: "",
+        //   price: "",
+        //   discount: "0",
+        //   category: "",
+        //   condition: "",
+        //   brand: "",
+        //   location: "",
+        // });
+        // setImages([]);
 
       } catch (err) {
         console.log(`Error is submitting product Data ${err.message}`);
@@ -281,6 +281,7 @@ const ProductDetail = () => {
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-lg shadow-2xl shadow-orange-100 overflow-hidden"
+          encType="multipart/form-data"
         >
           {/* Decorative top border */}
           <div className="h-1 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500"></div>

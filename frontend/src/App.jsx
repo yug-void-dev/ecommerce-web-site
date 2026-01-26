@@ -17,9 +17,9 @@ function App() {
           <Route path="/" element={<Homepage/>}/>
           <Route path="/auth" element={<AuthSystem/>}/>
           <Route path="/admin" element={<AdminDashboard/>}/>
+          <Route path="/user/product" element={<ProductDetail/>}/>
         </Routes>
       </BrowserRouter>
-      {/* <ProductDetail/> */}
       
     </>
   )

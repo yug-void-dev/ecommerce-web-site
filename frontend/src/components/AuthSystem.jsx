@@ -55,6 +55,7 @@ export default function AuthSystem() {
 
       try {
         const res = await axios.post("/api/auth/user/signin", userSiginData);
+        console.log(res)
         if (res.status == 201) {
           localStorage.setItem("token-olex", res.data.token);
           toast.success(res.data.message);

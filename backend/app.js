@@ -12,7 +12,6 @@ import { admin } from "./src/models/admin/admin.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 dotenv.config();
 const app = express();
 
@@ -48,7 +47,6 @@ app.post("/api/auth/signup", async (req, res) => {
 
 app.post("/api/auth/user/signin", async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const isexist = await user.findOne({ email });
     if (!isexist) {
@@ -63,8 +61,7 @@ app.post("/api/auth/user/signin", async (req, res) => {
         process.env.SecretKey,
         { expiresIn: "12h" },
       );
-
-      return res.status(200).json({
+      return res.status(201).json({
         message: "user login successfully",
         token,
       });

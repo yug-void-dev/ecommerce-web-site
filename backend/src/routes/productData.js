@@ -1,9 +1,29 @@
 import express from "express";
 import { product } from "../models/users/product.model.js";
+import dotenv from "dotenv";
+dotenv.config()
+
+import {v2 as cloudinary} from 'cloudinary'
 import multer from "multer";
+import fs from "fs";
 import path from "path";
 
+
+
 const router = express.Router();
+
+const uploadDir = "uploads/products";
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+
+cloudinary.config({
+  cloud_name : process.env.cloud_name,
+  api_key : process.env.api_key,
+  api_secret : process.env.api_secret
+})
 
 
 const storage = multer.diskStorage({
@@ -15,26 +35,37 @@ const storage = multer.diskStorage({
   },
 });
 
+
+
 const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|webp/;
-    const extname = allowedTypes.test(
-      path.extname(file.originalname).toLowerCase(),
-    );
-    const mimetype = allowedTypes.test(file.mimetype);
-
-    if (extname && mimetype) {
-      cb(null, true);
+      const allowedTypes = /jpeg|jpg|png|webp/;
+      const extname = allowedTypes.test(
+          path.extname(file.originalname).toLowerCase(),
+        );
+        const mimetype = allowedTypes.test(file.mimetype);
+      
+        if (extname && mimetype) {
+            cb(null, true);
     } else {
-      cb(new Error("Only image files are allowed"));
+        cb(new Error("Only image files are allowed"));
     }
   },
 });
 
-router.post("/product-data", upload.array("images", 8), async (req, res) => {
+router.post("/product-data", upload.array("images",12), async (req, res) => {
   try {
+    const files = req.files;
+    console.log(files)
+    const cloudinaryRes = await Promise.all(
+      files.map(file=> cloudinary.uploader.upload(file.path))   
+    )
+
+    const imagesPath = cloudinaryRes.map(file=>file.url)
+    
+   console.log(imagesPath)
     const {
       title,
       description,
@@ -45,14 +76,13 @@ router.post("/product-data", upload.array("images", 8), async (req, res) => {
       brand,
       location,
     } = req.body;
-    const imagesPath = req.files ? req.files.map((file) => file.path) : [];
 
     const newProduct = await product.create({
       title,
       description,
       price: parseFloat(price),
       discount: parseFloat(discount) || 0,
-      images: imagesPath,
+      image: imagesPath,
       category,
       condition,
       brand,

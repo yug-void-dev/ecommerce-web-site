@@ -261,6 +261,8 @@ export default function Homepage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Product cards will be rendered here */}
           <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
         </div>
       </div>
 

@@ -24,7 +24,6 @@ const productSchema = new mongoose.Schema(
     },
     image: {
       type: [String],
-      default: []
     },
     condition: {
         type: String,
@@ -33,7 +32,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: [
-        "Electronic",
+        "Electronics",
         "Fashion",
         "Home & Gardern",
         "Vechicle",

@@ -30,7 +30,7 @@ export default function ProductCard() {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-80 object-cover"
+            className="w-full h-60 object-cover"
           />
           
           {/* Wishlist Button */}
@@ -73,19 +73,7 @@ export default function ProductCard() {
             <span className="text-gray-500 text-sm">({product.reviews.toLocaleString()} reviews)</span>
           </div>
 
-          {/* Features */}
-          <div className="mb-4">
-            <p className="text-sm font-semibold text-gray-700 mb-2">Key Features:</p>
-            <div className="grid grid-cols-2 gap-2">
-              {product.features.map((feature, idx) => (
-                <div key={idx} className="flex items-center gap-1 text-xs text-gray-600">
-                  <span className="text-green-500">✓</span>
-                  <span>{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
+      
           {/* Price */}
           <div className="flex items-center gap-3 mb-4 pt-4 border-t border-gray-200">
             <span className="text-3xl font-bold text-gray-800">{product.price}</span>
