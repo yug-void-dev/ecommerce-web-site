@@ -9,6 +9,7 @@ import JsonWebToken from "jsonwebtoken";
 import authMiddleware from "./src/middleware/token.js";
 import productDataRouter from "./src/routes/productData.js";
 import { admin } from "./src/models/admin/admin.model.js";
+import { getProducts } from "./src/routes/getProduct.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", productDataRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(getProducts);
 
 app.post("/api/auth/signup", async (req, res) => {
   console.log(req.body);
