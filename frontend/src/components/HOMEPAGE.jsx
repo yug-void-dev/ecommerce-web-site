@@ -1,79 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, User, Menu, Search, X, ChevronLeft, ChevronRight, Heart, Star } from 'lucide-react';
-import ProductCard from './ProductCard';
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import {
+  ShoppingCart,
+  User,
+  Menu,
+  Search,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  Star,
+} from "lucide-react";
+import ProductCard from "./ProductCard";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Homepage() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
+  const [productData, setProductData] = useState([]);
 
-  useEffect(()=>{
+  const [loading, setLoading] = useState("");
+
+  useEffect(() => {
     const checkUser = async () => {
-      try{
-        const res = await axios.get('/api/user/home',{
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem('token-olex')}`
-        }
-      })
+      try {
+        const res = await axios.get("/api/user/home", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token-olex")}`,
+          },
+        });
+      } catch (error) {
+        navigate("/auth");
       }
-      catch(error){
-        navigate('/auth')
-      }
-    }
-    checkUser()
-},[])
+    };
+    checkUser();
+  }, []);
 
   const bannerSlides = [
     {
       title: "Republic Day Sale",
       subtitle: "Up to 70% OFF on Electronics",
-      bg: "bg-gradient-to-r from-orange-500 via-white to-green-500"
+      bg: "bg-gradient-to-r from-orange-500 via-white to-green-500",
     },
     {
       title: "New Year Offers",
       subtitle: "Flat 50% OFF on Fashion",
-      bg: "bg-gradient-to-r from-purple-600 to-pink-600"
+      bg: "bg-gradient-to-r from-purple-600 to-pink-600",
     },
     {
       title: "Winter Collection",
       subtitle: "Buy 2 Get 1 Free on Clothes",
-      bg: "bg-gradient-to-r from-blue-600 to-cyan-500"
-    }
+      bg: "bg-gradient-to-r from-blue-600 to-cyan-500",
+    },
   ];
 
   const categories = [
-    { name: 'Mobile Phones', icon: '📱' },
-    { name: 'Clothes', icon: '👕' },
-    { name: 'Earbuds', icon: '🎧' },
-    { name: 'Laptops', icon: '💻' },
-    { name: 'Cameras', icon: '📷' },
-    { name: 'Watches', icon: '⌚' },
-    { name: 'Shoes', icon: '👟' },
-    { name: 'Bags', icon: '🎒' }
+    { name: "Mobile Phones", icon: "📱" },
+    { name: "Clothes", icon: "👕" },
+    { name: "Earbuds", icon: "🎧" },
+    { name: "Laptops", icon: "💻" },
+    { name: "Cameras", icon: "📷" },
+    { name: "Watches", icon: "⌚" },
+    { name: "Shoes", icon: "👟" },
+    { name: "Bags", icon: "🎒" },
   ];
 
   const menuCategories = [
     {
-      title: 'Electronics',
-      items: ['Mobile Phones', 'Laptops', 'Tablets', 'Cameras', 'Televisions']
+      title: "Electronics",
+      items: ["Mobile Phones", "Laptops", "Tablets", "Cameras", "Televisions"],
     },
     {
-      title: 'Fashion',
-      items: ['Men\'s Clothing', 'Women\'s Clothing', 'Kids Wear', 'Footwear', 'Accessories']
+      title: "Fashion",
+      items: [
+        "Men's Clothing",
+        "Women's Clothing",
+        "Kids Wear",
+        "Footwear",
+        "Accessories",
+      ],
     },
     {
-      title: 'Home & Kitchen',
-      items: ['Home Appliances', 'Kitchen Appliances', 'Furniture', 'Home Decor', 'Cookware']
+      title: "Home & Kitchen",
+      items: [
+        "Home Appliances",
+        "Kitchen Appliances",
+        "Furniture",
+        "Home Decor",
+        "Cookware",
+      ],
     },
     {
-      title: 'Beauty & Personal Care',
-      items: ['Skincare', 'Makeup', 'Haircare', 'Fragrances', 'Personal Care']
-    }
+      title: "Beauty & Personal Care",
+      items: ["Skincare", "Makeup", "Haircare", "Fragrances", "Personal Care"],
+    },
   ];
 
   useEffect(() => {
@@ -84,15 +108,15 @@ export default function Homepage() {
   }, []);
 
   const toggleWishlist = (productId) => {
-    setWishlist(prev => 
-      prev.includes(productId) 
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
+    setWishlist((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId],
     );
   };
 
   const addToCart = (productId) => {
-    setCart(prev => [...prev, productId]);
+    setCart((prev) => [...prev, productId]);
   };
 
   const nextSlide = () => {
@@ -100,8 +124,22 @@ export default function Homepage() {
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length);
+    setCurrentSlide(
+      (prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length,
+    );
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await axios.get("/products");
+        setProductData(data.data);
+      } catch (err) {
+        setLoading("products are loading...");
+      }
+    };
+    fetchData();
+  }, [productData]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -111,7 +149,10 @@ export default function Homepage() {
           <div className="flex items-center justify-between h-16">
             {/* Logo & Menu */}
             <div className="flex items-center gap-4">
-              <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 hover:bg-gray-100 rounded-lg">
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+              >
                 <Menu className="w-6 h-6" />
               </button>
               <h1 className="text-2xl font-bold text-blue-600">ShopZone</h1>
@@ -133,9 +174,24 @@ export default function Homepage() {
 
             {/* Navigation Tabs */}
             <div className="hidden lg:flex items-center gap-6">
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Home Appliances</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Mobile Phones</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Fashion</a>
+              <a
+                href="#"
+                className="text-gray-700 hover:text-blue-600 font-medium"
+              >
+                Home Appliances
+              </a>
+              <a
+                href="#"
+                className="text-gray-700 hover:text-blue-600 font-medium"
+              >
+                Mobile Phones
+              </a>
+              <a
+                href="#"
+                className="text-gray-700 hover:text-blue-600 font-medium"
+              >
+                Fashion
+              </a>
             </div>
 
             {/* User Actions */}
@@ -166,8 +222,14 @@ export default function Homepage() {
 
       {/* Sidebar Menu */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMenuOpen(false)}>
-          <div className="bg-white w-80 h-full overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 bg-black bg-opacity-50"
+          onClick={() => setMenuOpen(false)}
+        >
+          <div
+            className="bg-white w-80 h-full overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-4 border-b flex items-center justify-between">
               <h2 className="text-xl font-bold">Categories</h2>
               <button onClick={() => setMenuOpen(false)}>
@@ -177,11 +239,16 @@ export default function Homepage() {
             <div className="p-4">
               {menuCategories.map((category, idx) => (
                 <div key={idx} className="mb-6">
-                  <h3 className="font-bold text-lg mb-2 text-gray-800">{category.title}</h3>
+                  <h3 className="font-bold text-lg mb-2 text-gray-800">
+                    {category.title}
+                  </h3>
                   <ul className="space-y-2">
                     {category.items.map((item, itemIdx) => (
                       <li key={itemIdx}>
-                        <a href="#" className="text-gray-600 hover:text-blue-600 hover:bg-gray-100 block p-2 rounded">
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-blue-600 hover:bg-gray-100 block p-2 rounded"
+                        >
                           {item}
                         </a>
                       </li>
@@ -201,11 +268,15 @@ export default function Homepage() {
             <div
               key={idx}
               className={`absolute inset-0 transition-all duration-700 ${
-                idx === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+                idx === currentSlide
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-full"
               } ${slide.bg} flex items-center justify-center`}
             >
               <div className="text-center text-white px-4">
-                <h2 className="text-5xl font-bold mb-4 drop-shadow-lg">{slide.title}</h2>
+                <h2 className="text-5xl font-bold mb-4 drop-shadow-lg">
+                  {slide.title}
+                </h2>
                 <p className="text-2xl drop-shadow-md">{slide.subtitle}</p>
                 <button className="mt-6 bg-white text-gray-800 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105">
                   Shop Now
@@ -231,7 +302,7 @@ export default function Homepage() {
                 key={idx}
                 onClick={() => setCurrentSlide(idx)}
                 className={`w-3 h-3 rounded-full ${
-                  idx === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
+                  idx === currentSlide ? "bg-white" : "bg-white bg-opacity-50"
                 }`}
               />
             ))}
@@ -249,7 +320,9 @@ export default function Homepage() {
               className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105"
             >
               <span className="text-4xl">{category.icon}</span>
-              <span className="text-sm text-center font-medium">{category.name}</span>
+              <span className="text-sm text-center font-medium">
+                {category.name}
+              </span>
             </button>
           ))}
         </div>
@@ -260,9 +333,13 @@ export default function Homepage() {
         <h2 className="text-2xl font-bold mb-6">Trending Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Product cards will be rendered here */}
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
+          {loading && <h1>products are loading</h1>}
+
+          {productData.map(product => {
+            <ProductCard key={product._id} title = {product.title} price = {product.price} discount = {product.discount} imageURL = {product.image[0]} condtion = {product.condtion} category = {product.category}/>
+          })}
+          
+
         </div>
       </div>
 
