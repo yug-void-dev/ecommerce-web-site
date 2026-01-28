@@ -332,11 +332,13 @@ export default function Homepage() {
       {/* Products Grid Section - Product cards removed */}
       <div className="max-w-7xl mx-auto px-4 mt-12 pb-12">
         <h2 className="text-2xl font-bold mb-6">Trending Products</h2>
+        { productData.length==0 ? <h1 className="text-2xl text-center text-gray-600 m-30">There is no product to show</h1> :
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Product cards will be rendered here */}
           {loading && <h1>products are loading</h1>}
 
-          {productData.map((product) => (
+          { 
+          productData.map((product) => (
             <ProductCard
               key={product._id}
               title={product.title}
@@ -346,8 +348,10 @@ export default function Homepage() {
               condition={product.condition}
               category={product.category}
             />
-          ))}
+          ))
+          }
         </div>
+}
       </div>
 
       {/* Footer */}
