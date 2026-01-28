@@ -23,7 +23,7 @@ export default function Homepage() {
   const [cart, setCart] = useState([]);
   const [productData, setProductData] = useState([]);
 
-  const [loading, setLoading] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -132,14 +132,15 @@ export default function Homepage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await axios.get("/products");
+        const data = await axios.get("/api/products");
+        console.log(data);
         setProductData(data.data);
       } catch (err) {
-        setLoading("products are loading...");
+        setLoading(true);
       }
     };
     fetchData();
-  }, [productData]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -335,11 +336,17 @@ export default function Homepage() {
           {/* Product cards will be rendered here */}
           {loading && <h1>products are loading</h1>}
 
-          {productData.map(product => {
-            <ProductCard key={product._id} title = {product.title} price = {product.price} discount = {product.discount} imageURL = {product.image[0]} condtion = {product.condtion} category = {product.category}/>
-          })}
-          
-
+          {productData.map((product) => (
+            <ProductCard
+              key={product._id}
+              title={product.title}
+              price={product.price}
+              discount={product.discount}
+              imageURL={product.image[0]}
+              condition={product.condition}
+              category={product.category}
+            />
+          ))}
         </div>
       </div>
 
