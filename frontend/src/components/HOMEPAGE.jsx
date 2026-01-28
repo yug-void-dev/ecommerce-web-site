@@ -11,6 +11,7 @@ export default function Homepage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
+  const [product, setProduct] = useState([]);
 
   useEffect(()=>{
     const checkUser = async () => {

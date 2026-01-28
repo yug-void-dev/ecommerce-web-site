@@ -2,11 +2,12 @@ import express from "express";
 import { product } from "../models/users/product.model.js";
 import dotenv from "dotenv";
 dotenv.config()
-
+import {user} from "../models/users/user.model.js"
 import {v2 as cloudinary} from 'cloudinary'
 import multer from "multer";
 import fs from "fs";
 import path from "path";
+import jwt from "jsonwebtoken"
 
 
 
@@ -56,6 +57,7 @@ const upload = multer({
 });
 
 router.post("/product-data", upload.array("images",12), async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
   try {
     const files = req.files;
     console.log(files)
@@ -77,6 +79,9 @@ router.post("/product-data", upload.array("images",12), async (req, res) => {
       location,
     } = req.body;
 
+    const data = jwt.verify(token,process.env.SecretKey)
+    let userData = await user.findOne({email : data.email})
+
     const newProduct = await product.create({
       title,
       description,
@@ -85,9 +90,14 @@ router.post("/product-data", upload.array("images",12), async (req, res) => {
       image: imagesPath,
       category,
       condition,
-      brand,
-      location,
+      brand,  
+      location, 
+      createdByUser : userData._id
     });
+    
+    userData = await user.findByIdAndUpdate(userData._id,
+      {$push : {products : newProduct._id}}
+    )
 
     res.status(201).json({
       message: "Product Created Successfully",

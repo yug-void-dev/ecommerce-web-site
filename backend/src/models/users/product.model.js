@@ -45,6 +45,9 @@ const productSchema = new mongoose.Schema(
     location: {
         type: String,
         required: true
+    },
+    createdByUser : {
+      type : String,
     }
   },
   {

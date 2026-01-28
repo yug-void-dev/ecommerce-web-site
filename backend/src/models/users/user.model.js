@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { type } from "os";
 const userSchema = new mongoose.Schema(
     {
         fullName : {
@@ -15,13 +16,9 @@ const userSchema = new mongoose.Schema(
             type : String,
             required : true
         },
-        products : 
-            [
-                {
-                    type : mongoose.Schema.Types.ObjectId,
-                    ref: "product"
-                }
-            ]
+        products : {
+            type : [String]
+        }
     },
     {timestamps:true}
 )

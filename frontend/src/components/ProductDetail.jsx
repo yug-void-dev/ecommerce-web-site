@@ -145,7 +145,12 @@ const ProductDetail = () => {
         console.log(pair[0], pair[1]);
       }
       try {
-        const res = await axios.post("/api/user/product-data", submitData);
+        const res = await axios.post("/api/user/product-data", submitData,
+          {
+           headers : {
+          Authorization : `Bearer ${localStorage.getItem('token-olex')}`
+        }
+        });
         console.log(res.data);
 
         // setFormData({
