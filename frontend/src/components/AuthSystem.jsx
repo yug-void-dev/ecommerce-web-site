@@ -2,8 +2,10 @@ import { useState } from "react";
 import { User, Mail, Lock, Shield } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthSystem() {
+  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
   const [userType, setUserType] = useState("user"); // 'user' or 'admin'
   const [formData, setFormData] = useState({
@@ -16,12 +18,20 @@ export default function AuthSystem() {
     e.preventDefault();
 
     if (userType === "admin") {
-      console.log("Admin Login:", {
-        email: formData.email,
-        password: formData.password,
-      });
-      alert(`Admin login attempted with: ${formData.email}`);
-    } else if (isSignUp) {
+      try{
+        const res = await axios.post('/api/auth/admin/signin')
+        if(res.status==201){
+          localStorage.setItem("token-admin",res.data.token);
+          toast.success(res.data.message)
+          navigate("/admin")
+        }
+      }
+      catch(error){
+        toast.error(error.response.data.message)
+      }
+
+    } 
+    else if (isSignUp) {
       const userObj = {
         fullName: formData.fullName,
         email: formData.email,
@@ -29,13 +39,13 @@ export default function AuthSystem() {
       };
       try {
         const res = await axios.post("/api/auth/signup", userObj);
-        if(res.status==201) toast.success(res.data.message);
-        else if(res.status==409) {
-          toast.error(res.data.message)
+        if (res.status == 201) toast.success(res.data.message);
+        else if (res.status == 409) {
+          toast.error(res.data.message);
         }
       } catch (error) {
-        console.log(error)
-          toast.error(error.response.data.message)
+        console.log(error);
+        toast.error(error.response.data.message);
       }
     } else {
       const userSiginData = {
@@ -44,10 +54,16 @@ export default function AuthSystem() {
       };
 
       try {
-        const res = await axios.post("/api/auth/signin", userSiginData);
-        if(res.status==201) toast.success(res.data.message)
+        const res = await axios.post("/api/auth/user/signin", userSiginData);
+        console.log(res)
+        if (res.status == 201) {
+          localStorage.setItem("token-olex", res.data.token);
+          toast.success(res.data.message);
+          navigate("/");
+        }
       } catch (err) {
-        toast.error(err.response.data.message)
+        console.log(err);
+        toast.error(err.response.data.message);
       }
     }
 
