@@ -22,6 +22,7 @@ export default function Homepage() {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
   const [productData, setProductData] = useState([]);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -129,6 +130,15 @@ export default function Homepage() {
     );
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token-olex");
+    navigate("/auth");
+  };
+
+  const handleProfile = () => {
+    navigate("/user/dashboard");
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -213,9 +223,30 @@ export default function Homepage() {
                   </span>
                 )}
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-lg">
-                <User className="w-6 h-6" />
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                  className="p-2 hover:bg-gray-100 rounded-lg"
+                >
+                  <User className="w-6 h-6" />
+                </button>
+                {showProfileDropdown && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-200">
+                    <button
+                      onClick={handleProfile}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
