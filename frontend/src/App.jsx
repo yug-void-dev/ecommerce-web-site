@@ -7,6 +7,7 @@ import ProductDetail from './components/ProductDetail';
 
 import AdminDashboard from './components/AdminDashboard';
 import UserDashboad from './components/UserDashboad';
+import ViewProductPage from './components/ViewProductPage';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard/>}/>
           <Route path="/user/product" element={<ProductDetail/>}/>
           <Route path='/user/dashboard' element={<UserDashboad/>}/>
+          <Route path='/user/:id' element={<ViewProductPage/>}/>
         </Routes>
       </BrowserRouter>
       
