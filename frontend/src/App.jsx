@@ -7,11 +7,14 @@ import ProductDetail from "./components/ProductDetail";
 import AdminDashboard from "./components/AdminDashboard";
 import UserDashboad from "./components/UserDashboad";
 import ViewDetailPage from "./components/ViewDetailPage";
+import Header from "./components/Header";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <ToastContainer/>
+        <Header/>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/auth" element={<AuthSystem />} />

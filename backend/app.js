@@ -81,6 +81,11 @@ app.get("/api/user/home", authMiddleware, (req, res) => {
   res.status(200).json({ message: "Welcome" });
 });
 
+app.get("/api/product/detail", authMiddleware, (req, res) => {
+  res.status(200).json({ message: "Welcome" });
+});
+
+
 app.post("/api/auth/admin/signin", async (req, res) => {
   const { email, password } = req.body;
 
