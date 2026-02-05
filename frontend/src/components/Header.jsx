@@ -1,23 +1,52 @@
-import React , {useState} from 'react'
+import {useState} from 'react'
 import {
   ShoppingCart,
   User,
   Menu,
-  Search,
   X,
-  ChevronLeft,
-  ChevronRight,
+  Search,
   Heart,
-  Star,
 } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 
 const Header = () => {
     const navigate = useNavigate()
     const [searchQuery, setSearchQuery] = useState("");
-    const [wishlist, setWishlist] = useState([]);
-    const [cart, setCart] = useState([]);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [wishlist] = useState([]);
+    const [cart] = useState([]);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+
+  const menuCategories = [
+    {
+      title: "Electronics",
+      items: ["Mobile Phones", "Laptops", "Tablets", "Cameras", "Televisions"],
+    },
+    {
+      title: "Fashion",
+      items: [
+        "Men's Clothing",
+        "Women's Clothing",
+        "Kids Wear",
+        "Footwear",
+        "Accessories",
+      ],
+    },
+    {
+      title: "Home & Kitchen",
+      items: [
+        "Home Appliances",
+        "Kitchen Appliances",
+        "Furniture",
+        "Home Decor",
+        "Cookware",
+      ],
+    },
+    {
+      title: "Beauty & Personal Care",
+      items: ["Skincare", "Makeup", "Haircare", "Fragrances", "Personal Care"],
+    },
+  ];
 
     const handleLogout = () => {
         localStorage.removeItem("token-olex");
@@ -41,7 +70,7 @@ const Header = () => {
               >
                 <Menu className="w-6 h-6" />
               </button>
-              <h1 className="text-2xl font-bold text-blue-600">ShopZone</h1>
+              <Link to='/'><h1 className="text-2xl font-bold text-blue-600">ShopZone</h1></Link>
             </div>
 
             {/* Search Bar */}
@@ -126,6 +155,47 @@ const Header = () => {
           </div>
         </div>
       </nav>
+        {/* Sidebar Menu */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black bg-opacity-50"
+          onClick={() => setMenuOpen(false)}
+        >
+          <div
+            className="bg-white w-80 h-full overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b flex items-center justify-between">
+              <h2 className="text-xl font-bold">Categories</h2>
+              <button onClick={() => setMenuOpen(false)}>
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-4">
+              {menuCategories.map((category, idx) => (
+                <div key={idx} className="mb-6">
+                  <h3 className="font-bold text-lg mb-2 text-gray-800">
+                    {category.title}
+                  </h3>
+                  <ul className="space-y-2">
+                    {category.items.map((item, itemIdx) => (
+                      <li key={itemIdx}>
+                        <a
+                          href="#"
+                          onClick={() => setMenuOpen(false)}
+                          className="text-gray-600 hover:text-blue-600 hover:bg-gray-100 block p-2 rounded"
+                        >
+                          {item}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
   </>
   )
 }

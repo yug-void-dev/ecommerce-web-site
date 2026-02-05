@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
+import Header from './Header';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const ViewDetailPage = () => {
+  const {id} = useParams()
   const [activeImage, setActiveImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedTab, setSelectedTab] = useState('description');
+  const [productDetail, setProduct] = useState({});
 
   const images = [
     'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&h=800&fit=crop',
@@ -51,8 +57,27 @@ const ViewDetailPage = () => {
     { name: 'Emily R.', rating: 4, comment: 'Good product, minor delay in shipping.', date: '2 weeks ago' }
   ];
 
+  useEffect(()=>{
+    const takeData = async () =>{
+    try{
+      const productRes = await axios.get(`/api/product/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token-olex")}`,
+          },
+        })
+        console.log(productRes.data.productData[0])
+        setProduct(productRes.data.productData[0])
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+  takeData()
+  },[])
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header/>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -120,7 +145,7 @@ const ViewDetailPage = () => {
           {/* Product Info */}
           <div className="flex flex-col">
             <h1 className="text-3xl font-bold text-gray-900 mb-3">
-              Apple iPhone 12 - 128GB (Used)
+              {productDetail.title} (Used)
             </h1>
 
             {/* Seller Info */}
@@ -156,7 +181,7 @@ const ViewDetailPage = () => {
             <div className="mb-4">
               <div className="flex items-baseline gap-3 mb-2">
                 <span className="text-4xl font-bold text-gray-900">₹32,999</span>
-                <span className="text-xl text-gray-400 line-through">₹79,900</span>
+                  {productDetail.discount!=0 && <span className="text-xl text-gray-400 line-through">₹79,900</span>}
                 <span className="bg-red-100 text-red-600 text-sm font-semibold px-2 py-1 rounded">
                   59% OFF
                 </span>

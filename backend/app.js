@@ -10,6 +10,7 @@ import authMiddleware from "./src/middleware/token.js";
 import productDataRouter from "./src/routes/productData.js";
 import { admin } from "./src/models/admin/admin.model.js";
 import { getProducts } from "./src/routes/getProduct.js";
+import { product } from "./src/models/users/product.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -119,6 +120,16 @@ app.post("/api/auth/admin/signin", async (req, res) => {
 
 app.get("/api/admin/home", authMiddleware, (req, res) => {
   res.status(200).json({ message: "Welcome" });
+});
+
+app.get("/api/product/:id", authMiddleware, async (req, res) => {
+ try{
+    const proRes = await product.find({_id:req.params.id})
+    res.status(200).json({ productData: proRes });
+ }
+ catch(err){
+    res.status(401).json({ message: "server error" ,error : err});
+ }
 });
 
 const port = process.env.PORT;

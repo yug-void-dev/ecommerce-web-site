@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from './Header';
 
 const EnhancedUserProfile = () => {
   const [activeTab, setActiveTab] = useState('listings');
@@ -200,7 +201,7 @@ const EnhancedUserProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header */}
-
+      <Header/>
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Profile Header Card */}

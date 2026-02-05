@@ -14,14 +14,13 @@ function App() {
     <>
       <BrowserRouter>
         <ToastContainer/>
-        <Header/>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/auth" element={<AuthSystem />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/user/product" element={<ProductDetail />} />
           <Route path="/user/dashboard" element={<UserDashboad />} />
-          <Route path="/product/detail" element={<ViewDetailPage />} />
+          <Route path="/product/:id" element={<ViewDetailPage />} />
         </Routes>
       </BrowserRouter>
     </>

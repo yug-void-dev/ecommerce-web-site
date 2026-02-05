@@ -1,34 +1,23 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
-  ShoppingCart,
-  User,
-  Menu,
-  Search,
-  X,
   ChevronLeft,
   ChevronRight,
-  Heart,
-  Star,
 } from "lucide-react";
 import ProductCard from "./ProductCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 export default function Homepage() {
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [wishlist, setWishlist] = useState([]);
-  const [cart, setCart] = useState([]);
   const [productData, setProductData] = useState([]);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const res = await axios.get("/api/user/home", {
+        await axios.get("/api/user/home", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token-olex")}`,
           },
@@ -69,55 +58,12 @@ export default function Homepage() {
     { name: "Bags", icon: "🎒" },
   ];
 
-  const menuCategories = [
-    {
-      title: "Electronics",
-      items: ["Mobile Phones", "Laptops", "Tablets", "Cameras", "Televisions"],
-    },
-    {
-      title: "Fashion",
-      items: [
-        "Men's Clothing",
-        "Women's Clothing",
-        "Kids Wear",
-        "Footwear",
-        "Accessories",
-      ],
-    },
-    {
-      title: "Home & Kitchen",
-      items: [
-        "Home Appliances",
-        "Kitchen Appliances",
-        "Furniture",
-        "Home Decor",
-        "Cookware",
-      ],
-    },
-    {
-      title: "Beauty & Personal Care",
-      items: ["Skincare", "Makeup", "Haircare", "Fragrances", "Personal Care"],
-    },
-  ];
-
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
     }, 4000);
     return () => clearInterval(timer);
   }, []);
-
-  const toggleWishlist = (productId) => {
-    setWishlist((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId],
-    );
-  };
-
-  const addToCart = (productId) => {
-    setCart((prev) => [...prev, productId]);
-  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
@@ -129,21 +75,12 @@ export default function Homepage() {
     );
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token-olex");
-    navigate("/auth");
-  };
-
-  const handleProfile = () => {
-    navigate("/user/dashboard");
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await axios.get("/api/products");
-        console.log(data);
-        setProductData(data.data);
+        const productRes = await axios.get("/api/products");
+        console.log(productRes);
+        setProductData(productRes.data);
       } catch (err) {
         setLoading(true);
       }
@@ -154,47 +91,7 @@ export default function Homepage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Bar */}
-
-      {/* Sidebar Menu */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-50"
-          onClick={() => setMenuOpen(false)}
-        >
-          <div
-            className="bg-white w-80 h-full overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-4 border-b flex items-center justify-between">
-              <h2 className="text-xl font-bold">Categories</h2>
-              <button onClick={() => setMenuOpen(false)}>
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-4">
-              {menuCategories.map((category, idx) => (
-                <div key={idx} className="mb-6">
-                  <h3 className="font-bold text-lg mb-2 text-gray-800">
-                    {category.title}
-                  </h3>
-                  <ul className="space-y-2">
-                    {category.items.map((item, itemIdx) => (
-                      <li key={itemIdx}>
-                        <a
-                          href="#"
-                          className="text-gray-600 hover:text-blue-600 hover:bg-gray-100 block p-2 rounded"
-                        >
-                          {item}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <Header/>
 
       {/* Carousel Banner */}
       <div className="relative max-w-7xl mx-auto mt-4 px-4">
@@ -263,30 +160,18 @@ export default function Homepage() {
         </div>
       </div>
 
-      {/* Products Grid Section - Product cards removed */}
-      <div className="max-w-7xl mx-auto px-4 mt-12 pb-12">
-        <h2 className="text-2xl font-bold mb-6">Trending Products</h2>
-        { productData.length==0 ? <h1 className="text-2xl text-center text-gray-600 m-30">There is no product to show</h1> :
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Product cards will be rendered here */}
-          {loading && <h1>products are loading</h1>}
-
-          { 
-          productData.map((product) => (
-            <ProductCard
-              key={product._id}
-              title={product.title}
-              price={product.price}
-              discount={product.discount}
-              imageURL={product.image[0]}
-              condition={product.condition}
-              category={product.category}
-            />
-          ))
-          }
-        </div>
-}
-      </div>
+{/* Products Grid Section - Product cards removed */}
+<div className="max-w-7xl mx-auto px-4 mt-12 pb-12">
+  <h2 className="text-2xl font-bold mb-6">Trending Products</h2>
+  {productData.length === 0 ? (
+    <h1 className="text-2xl text-center text-gray-600 m-30">There is no product to show</h1>
+  ) : (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {loading && <h1>products are loading</h1>}
+      {productData.map((product,ind) =>  <ProductCard key={ind} product={product}/>)}
+    </div>
+  )}
+</div>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-8">
